@@ -120,9 +120,16 @@ app.put('/api/persons/:id', (request, response, next) => {
   return String(randomID)
 } */
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
+
+  console.log("started posting")
   
-    const body = request.body
+  const body = request.body
+
+  /* if (!body.name) {
+    return response.status(400).json({ error: 'name missing' })
+  } */
+  
     if (!body.name) {
       return response.status(400).json({
         error: 'name missing',
@@ -145,8 +152,9 @@ app.post('/api/persons', (request, response) => {
       person.save().then(result => {
       console.log('person saved!')
       response.status(201).json(result)
-      
       })
+      .catch(error => next(error))
+
        
   }
   
@@ -156,7 +164,6 @@ app.post('/api/persons', (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
 
-// handler of requests with unknown endpoint
 app.use(unknownEndpoint)
 
 const errorHandler = (error, request, response, next) => {
@@ -164,12 +171,14 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } 
+
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
+  }
 
   next(error)
 }
 
-// this has to be the last loaded middleware, also all the routes should be registered before this!
 app.use(errorHandler)
 
 
