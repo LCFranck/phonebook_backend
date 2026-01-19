@@ -38,8 +38,7 @@ jobs:
 
       - name: Deploy
         run: curl ${{ secrets.DEPLOYMENT_HOOK }}
-
-          - name: The job has succeeded
+      - name: The job has succeeded
         if: ${{ success() }}
         uses: rjstone/discord-webhook-notify@v2
         with:
