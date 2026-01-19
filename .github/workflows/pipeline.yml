@@ -8,6 +8,8 @@ on:
     branches: [main]
     types: [opened, synchronize]
 
+#i spent so much time solving lint errors in another project that i later realized i could not use for the this and the next excercise, since i do not want to require a reveiw from a collaborator to a personal project so i will not fix the frotnend lint errors in this old project thank you for understanding
+
 jobs:
   build_and_deploy:
     name: Build and Deploy Phonebook
@@ -37,9 +39,44 @@ jobs:
       - name: Deploy
         run: curl ${{ secrets.DEPLOYMENT_HOOK }}
 
-      #- name: Discord notify
-      #  uses: rjstone/discord-webhook-notify@v2
-      #  with:
-      #    webhookUrl: ${{ secrets.DISCORD_HOOK_URL }}
-      #    username: PhonebookBot
-      #    text: "Deployment completed successfully!"
+          - name: The job has succeeded
+        if: ${{ success() }}
+        uses: rjstone/discord-webhook-notify@v2
+        with:
+          webhookUrl: ${{ secrets.DISCORD_HOOK_URL }}
+          username: Sten Stensson
+          avatarUrl: "https://media.istockphoto.com/id/184600247/photo/grumpy-senior-man.jpg?s=612x612&w=0&k=20&c=_mBQPDcq1E3Vyz5uiw8QnwAikXVcdtiRChvrMUyuzRw="
+          text: "JIPPIIII Deployment succeeded!!!!!!!!!!"
+          severity: info # only to make sure the embed is added
+          color: '#A0FF85'
+          title: Success!
+          description: "Deployment was successful :) "
+          # details: not needed because we overrode default description.
+          footer: Well done!.
+      - name: The job has FAILED
+        if: ${{ failure() }}
+        uses: rjstone/discord-webhook-notify@v2
+        with:
+          webhookUrl: ${{ secrets.DISCORD_HOOK_URL }}
+          username: Sten Stensson
+          avatarUrl: "https://media.istockphoto.com/id/184600247/photo/grumpy-senior-man.jpg?s=612x612&w=0&k=20&c=_mBQPDcq1E3Vyz5uiw8QnwAikXVcdtiRChvrMUyuzRw="
+          text: " Deployment FAILED!!!!!!!!!!"
+          severity: info # only to make sure the embed is added
+          color: '#C7371A'
+          title: EPIC FAIL!
+          description: "Deployment FAILED"
+          # details: not needed because we overrode default description.
+          footer: Do better!.
+
+
+  tag_release:
+    needs: [build_and_deploy]
+    runs-on: ubuntu-latest   
+    steps:  
+      - uses: actions/checkout@v4
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+        uses: anothrNick/github-tag-action@1.64.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
