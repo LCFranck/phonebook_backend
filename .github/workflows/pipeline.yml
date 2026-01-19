@@ -36,7 +36,7 @@ jobs:
           npm run build
 
       - name: Deploy
-        run: curl ${{ secrets.DEPLOY_HOOK }}
+        run: curl ${{ secrets.DEPLOYMENT_HOOK }}
 
       #- name: Discord notify
       #  uses: rjstone/discord-webhook-notify@v2

@@ -19,13 +19,13 @@ mongoose.connect(url)
 
 
 const personSchema = new mongoose.Schema({
-  name: {type: String,    minLength: 3,    required: true  },
-  number: {type: String,     validate: {
+  name: { type: String,    minLength: 3,    required: true  },
+  number: { type: String,     validate: {
     validator: (num) => {
       const splitArray = num.split('-')
       let regex = /^\d+$/
-      if (splitArray.length==2 && 
-            splitArray[0].length<=2 && 
+      if (splitArray.length===2 &&
+            splitArray[0].length<=2 &&
             splitArray[0].length>0 &&
             regex.test(splitArray[0]) &&
             regex.test(splitArray[1]) && num.length>=9
@@ -36,7 +36,7 @@ const personSchema = new mongoose.Schema({
         return false
     },
     message: 'Incorrect number format'
-  } } 
+  } }
 })
 
 personSchema.set('toJSON', {

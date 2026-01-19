@@ -28,5 +28,5 @@ export default [
       'no-console': 'off',
     }, 
   },
-    {     ignores: ['dist/**'],   },
+    {     ignores: ['dist/**', 'phonebook_frontend/**'] },
 ]

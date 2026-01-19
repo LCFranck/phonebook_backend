@@ -85,7 +85,7 @@ app.get('/api/persons/:id', (request, response, next) => {
 
   response.status(204).end()})
 
-  
+
 }) */
 
 app.delete('/api/persons/:id', (request, response, next) => {
@@ -123,13 +123,13 @@ app.put('/api/persons/:id', (request, response, next) => {
 app.post('/api/persons', (request, response, next) => {
 
   console.log('started posting')
-  
+
   const body = request.body
 
   /* if (!body.name) {
     return response.status(400).json({ error: 'name missing' })
   } */
-  
+
   if (!body.name) {
     return response.status(400).json({
       error: 'name missing',
@@ -143,7 +143,7 @@ app.post('/api/persons', (request, response, next) => {
   }
 
   const person = new Person({
-    name: body.name, 
+    name: body.name,
     number: body.number,
   })
 
@@ -155,9 +155,9 @@ app.post('/api/persons', (request, response, next) => {
     })
       .catch(error => next(error))
 
-       
+
   }
-  
+
 })
 
 const unknownEndpoint = (request, response) => {
