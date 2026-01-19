@@ -30,6 +30,10 @@ app.get('/api/persons', (request, response) => {
   })
 })
 
+app.get('/health', (req, res) => {
+  res.send('ok')
+})
+
 
 app.get('/api/info', (request, response) => {
   const time = new Date()
