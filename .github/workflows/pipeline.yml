@@ -1,0 +1,46 @@
+name: Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  build_and_deploy:
+    name: Build and Deploy Phonebook
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Debug branch
+        run: echo "Running workflow on branch ${{ github.ref }}"
+
+      - name: Install backend dependencies
+        run: npm install
+
+      - name: Lint backend
+        working-directory: ./backend
+        run: npm run lint
+
+      - name: Build frontend
+        working-directory: ./phonebook_frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy
+        run: curl ${{ secrets.DEPLOY_HOOK }}
+
+      #- name: Discord notify
+      #  uses: rjstone/discord-webhook-notify@v2
+      #  with:
+      #    webhookUrl: ${{ secrets.DISCORD_HOOK_URL }}
+      #    username: PhonebookBot
+      #    text: "Deployment completed successfully!"
