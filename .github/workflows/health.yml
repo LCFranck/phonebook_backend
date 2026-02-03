@@ -18,3 +18,16 @@ jobs:
           max-attempts: 3
           retry-delay: 10s
           retry-all: true
+      - name: The job has FAILED
+        if: ${{ failure() }}
+        uses: rjstone/discord-webhook-notify@v2
+        with:
+          webhookUrl: ${{ secrets.DISCORD_HOOK_URL }}
+          username: Sten Stensson
+          avatarUrl: "https://media.istockphoto.com/id/184600247/photo/grumpy-senior-man.jpg?s=612x612&w=0&k=20&c=_mBQPDcq1E3Vyz5uiw8QnwAikXVcdtiRChvrMUyuzRw="
+          text: " Deployment FAILED!!!!!!!!!!"
+          severity: info 
+          color: '#C7371A'
+          title: EPIC FAIL!
+          description: "Deployment FAILED"
+          footer: Do better!.
