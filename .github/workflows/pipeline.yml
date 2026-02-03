@@ -8,7 +8,6 @@ on:
     branches: [main]
     types: [opened, synchronize]
 
-
 jobs:
   build_and_deploy:
     name: Build and Deploy Phonebook
@@ -19,22 +18,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-
       - name: Debug branch
         run: echo "Running workflow on branch"
-
       - name: Install backend dependencies
         run: npm install
-
       - name: Lint backend
         run: npm run lint
-
       - name: Build frontend
         working-directory: ./phonebook_frontend
         run: |
           npm install
           npm run build
-
       - name: Deploy
         run: curl ${{ secrets.DEPLOYMENT_HOOK }}
       - name: The job has succeeded
